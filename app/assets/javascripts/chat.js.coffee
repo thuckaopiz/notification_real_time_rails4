@@ -5,7 +5,7 @@ $ ->
     if event.data.length
       $("#output").append "#{event.data}<br>"
 
-  $("body").on "submit", "form.chat", (event) ->
+  $("#chat").on "submit", (event) ->
     event.preventDefault()
     $input = $(this).find("input")
     socket.send $input.val()

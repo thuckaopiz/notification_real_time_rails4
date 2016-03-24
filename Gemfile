@@ -18,6 +18,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'redis'
 gem 'puma'
 gem 'tubesock'
+gem 'byebug'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
