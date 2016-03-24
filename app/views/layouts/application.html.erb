@@ -9,6 +9,11 @@
 <body>
   <%= link_to "sign out", "/users/sign_out", method: :delete, id: "sign_out_link" if current_user %>
   <%= link_to "sign in", "/users/sign_in" unless current_user %>
+  |
+  <%= link_to "Home", root_path %>
+  <br>
+  <%= link_to "Create article", new_article_path %>
+
 <%= yield %>
 
 </body>

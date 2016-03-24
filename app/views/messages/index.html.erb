@@ -1,26 +1,35 @@
-<h1>Chat</h1>
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-<ul id="chat">
-  <%= render @messages %>
-</ul>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <ul>
+        <% @users.each do |user| %>
+          <li class="<%= user.online? ? 'online' : '' %>" id="online-status-<%=user.id%>" >
+            <%= user.email %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h1>Chat Box</h1>
 
-<div id="notification">
-  Notification<br>
+      <ul id="chat">
+        <%= render @messages %>
+      </ul>
+      <%= form_for Message.new, remote: true do |f| %>
+        <%= f.text_field :content %>
+        <%= f.submit "Send" %>
+      <% end %>
+    </div>
+
+    <div id="notification" class="col-md-3">
+      Notification<br>
+    </div>
+
+  </div>
 </div>
-
-<%= form_for Message.new, remote: true do |f| %>
-  <%= f.text_field :content %>
-  <%= f.submit "Send" %>
-<% end %>
-
-<ul>
-  <% @users.each do |user| %>
-    <li class="<%= user.online? ? 'online' : '' %>" id="online-status-<%=user.id%>" >
-      <%= user.email %>
-    </li>
-  <% end %>
-</ul>
-
 <%= subscribe_to "/messages/new" %>
 <%= subscribe_to "/sign_out" %>
 <%= subscribe_to "/sign_in" %>
@@ -45,6 +54,6 @@
   });
 
   PrivatePub.subscribe("/create_article", function(data, channel) {
-    $("#notification").append(JSON.parse(data.article)["title"] +"has been created" + "<br>");
+    $("#notification").append(JSON.parse(data.article)["title"] +" has been created" + "<br>");
   });
 </script>

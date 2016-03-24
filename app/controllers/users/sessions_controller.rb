@@ -11,7 +11,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     # byebug
     super
-    log_in current_user
+    send_notification_log_in current_user
   end
 
   # DELETE /resource/sign_out
@@ -20,14 +20,14 @@ class Users::SessionsController < Devise::SessionsController
     user = current_user
     # PrivatePub.publish_to("/messages/new", message: @message.to_json)
     super
-    log_out(user)
+    send_notification_log_out(user)
   end
 
-  def log_out user
+  def send_notification_log_out user
     PrivatePub.publish_to("/sign_out", user: user.to_json)
   end
 
-  def log_in user
+  def send_notification_log_in user
     PrivatePub.publish_to("/sign_in", user: user.to_json)
   end
 
