@@ -11,3 +11,8 @@
  *= require_self
  *= require_tree .
  */
+
+
+.online{
+  color: green
+}

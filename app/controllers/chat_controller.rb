@@ -1,40 +1,34 @@
 class ChatController < ApplicationController
   include Tubesock::Hijack
+  # before_action :authenticate_user!
 
   def chat
-    hijack do |tubesock|
-      # Listen on its own thread
-      redis_thread = Thread.new do
-        # Needs its own redis connection to pub
-        # and sub at the same time
-        Redis.new.subscribe "chat" do |on|
-          on.message do |channel, message|
-            tubesock.send_data message
-          end
-        end
-      end
-
-      tubesock.onmessage do |m|
-        # byebug
-        # pub the message when we get one
-        # note: this echoes through the sub above
-        Redis.new.publish "chat", m
-      end
-      
-      tubesock.onclose do
-        # stop listening when client leaves
-        redis_thread.kill
-      end
-    end
+    send_message nil, "chat"
   end
 
   def other_chat
+    send_message nil, "other_chat"
+  end
+
+  def index
+    @users = User.all
+  end
+
+  def sign_out
+    send_message current_user.to_json, "sign_out"
+  end
+
+  def sign_in
+  end
+
+  def create_article
+    send_message current_user.to_json, "create_article"
+  end
+
+  def send_message message=nil, channel_name
     hijack do |tubesock|
-      # Listen on its own thread
       redis_thread = Thread.new do
-        # Needs its own redis connection to pub
-        # and sub at the same time
-        Redis.new.subscribe "other_chat" do |on|
+        Redis.new.subscribe channel_name do |on|
           on.message do |channel, message|
             tubesock.send_data message
           end
@@ -42,14 +36,11 @@ class ChatController < ApplicationController
       end
 
       tubesock.onmessage do |m|
-        # byebug
-        # pub the message when we get one
-        # note: this echoes through the sub above
-        Redis.new.publish "other_chat", m
+        m = message==nil ? m : message
+        Redis.new.publish channel_name, m
       end
-      
+
       tubesock.onclose do
-        # stop listening when client leaves
         redis_thread.kill
       end
     end

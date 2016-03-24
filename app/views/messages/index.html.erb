@@ -1,0 +1,50 @@
+<h1>Chat</h1>
+
+<ul id="chat">
+  <%= render @messages %>
+</ul>
+
+<div id="notification">
+  Notification<br>
+</div>
+
+<%= form_for Message.new, remote: true do |f| %>
+  <%= f.text_field :content %>
+  <%= f.submit "Send" %>
+<% end %>
+
+<ul>
+  <% @users.each do |user| %>
+    <li class="<%= user.online? ? 'online' : '' %>" id="online-status-<%=user.id%>" >
+      <%= user.email %>
+    </li>
+  <% end %>
+</ul>
+
+<%= subscribe_to "/messages/new" %>
+<%= subscribe_to "/sign_out" %>
+<%= subscribe_to "/sign_in" %>
+<%= subscribe_to "/create_article" %>
+
+<script>
+  PrivatePub.subscribe("/messages/new", function(data, channel) {
+    $("#chat").append(JSON.parse(data.message)["content"] + "<br>");
+  });  
+
+  PrivatePub.subscribe("/sign_out", function(data, channel) {
+    $("#notification").append(JSON.parse(data.user)["email"] + " signed out" + "<br>");
+    onlineStatus = "#online-status-" + JSON.parse(data.user)["id"];
+    $(onlineStatus).removeClass("online");
+  });
+
+  PrivatePub.subscribe("/sign_in", function(data, channel) {
+    $("#notification").append(JSON.parse(data.user)["email"] + " signed in" + "<br>");
+    onlineStatus = "#online-status-" + JSON.parse(data.user)["id"];
+    console.log(onlineStatus);
+    $(onlineStatus).addClass("online");
+  });
+
+  PrivatePub.subscribe("/create_article", function(data, channel) {
+    $("#notification").append(JSON.parse(data.article)["title"] +"has been created" + "<br>");
+  });
+</script>

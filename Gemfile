@@ -19,6 +19,9 @@ gem 'redis'
 gem 'puma'
 gem 'tubesock'
 gem 'byebug'
+gem 'devise'
+gem 'private_pub'
+gem "thin"
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
