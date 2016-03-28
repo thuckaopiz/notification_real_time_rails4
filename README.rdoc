@@ -1,3 +1,7 @@
+Local:
 - rails s
 - rackup private_pub.ru -s thin -E production
 - localhost:3000
+
+Product:
+- https://mysterious-savannah-61941.herokuapp.com/
