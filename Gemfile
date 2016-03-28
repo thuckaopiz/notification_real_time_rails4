@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.0'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -21,7 +21,7 @@ gem 'tubesock'
 gem 'byebug'
 gem 'devise'
 gem 'private_pub'
-gem "thin"
+# gem "thin"
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -51,3 +51,9 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+gem 'pg'
+gem 'rails_12factor', group: :production
+group :production do
+  gem 'thin'  
+end
+gem 'rack'
